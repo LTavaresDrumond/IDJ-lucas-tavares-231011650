@@ -1,0 +1,27 @@
+# Compilados
+*.o
+*.exe
+*.dll
+*.out
+
+# Diretórios de build
+bin/
+obj/
+
+# Arquivos de IDE
+.vscode/
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+# Arquivos temporários e de sistema
+*.log
+.DS_Store
+Thumbs.db
+
+# PDFs de orientação (boas práticas para manter o repositório focado no código)
+*.pdf
+Trabalhos_Jogo_L2D/*.pdf
+Tutoriais/*.pdf
