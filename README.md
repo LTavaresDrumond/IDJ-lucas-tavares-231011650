@@ -16,7 +16,7 @@ Primeira etapa do trabalho consiste:
 
 ## Como Executar
 
-### 1. Windows (Via MSYS2/MinGW)
+### 1. Windows (Via MSYS2/MinGW) Opção que estou usando.
 
 **Pré-requisitos:**
 1. Tenha o `g++` e `make` instalados e configurados na variável de ambiente do seu Windows (ex: adicionando `C:\msys64\ucrt64\bin` ao `Path`).
@@ -34,7 +34,7 @@ Primeira etapa do trabalho consiste:
    .\JOGO.exe
    ```
 
-### 2. Linux (Ex: GitHub Codespaces)
+### 2. Linux (GitHub Codespaces as vezes uso para acesso remoto do Macook)
 
 **Pré-requisitos:**
 Instalar as bibliotecas da SDL2 via gerenciador de pacotes da sua distribuição. No Ubuntu/Debian:
@@ -54,7 +54,3 @@ sudo apt-get install -y build-essential libsdl2-dev libsdl2-image-dev libsdl2-mi
    ./JOGO
    ```
 
-> **Aviso para rodar no Codespaces Headless:**
-> Se o servidor não tiver interface gráfica instalada, rodar `./JOGO` diretamente irá falhar pois não há "Display" para abrir a janela. Caso queira apenas testar se não há erros na inicialização lógica do binário, rode usando variáveis de ambiente de Dummy Devices:
-> `SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy ./JOGO`
-> *(Aperte `Ctrl+C` para encerrar já que nenhuma janela irá aparecer).*
