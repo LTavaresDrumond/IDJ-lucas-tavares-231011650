@@ -9,7 +9,7 @@ bool State::QuitRequested() {
 }
 
 void State::LoadAssets() {
-    // Para próximos trabalhos
+    
 }
 
 void State::Update(float dt) {
