@@ -21,7 +21,11 @@ obj/
 .DS_Store
 Thumbs.db
 
-# PDFs de orientação (boas práticas para manter o repositório focado no código)
+# PDFs de orientação
+*.pdf
+Trabalhos_Jogo_L2D/*.pdf
+Tutoriais/*.pdf
+orientação (boas práticas para manter o repositório focado no código)
 *.pdf
 Trabalhos_Jogo_L2D/*.pdf
 Tutoriais/*.pdf
