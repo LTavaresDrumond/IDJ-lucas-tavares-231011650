@@ -1,14 +1,13 @@
-# Introdução ao Desenvolvimento de Jogos (IDJ) - Trabalho 1
+# CIC0191 - INTRODUÇÃO AO DESENVOLVIMENTO DE JOGOS - T01 (2026.2)
 
 **Aluno:** Lucas Tavares Drumond  
 **Matrícula:** 231011650  
-**Turma:** 01 - 2026/2  
 
 ## Descrição do Projeto
 
-Este repositório contém o código-fonte da primeira fase da engine construída na disciplina de IDJ (Introdução ao Desenvolvimento de Jogos).
+Repositório da disciplina de CIC0191 - Introdução ao Desenvolvimento de Jogos.
 
-A Fase Um consiste na configuração inicial do repositório, implementação da estrutura de compilação cruzada (Windows/Linux via Makefile) e na implementação das quatro classes fundamentais baseadas na biblioteca SDL2:
+Primeira etapa do trabalho consiste:
 
 - `Game`: Engine principal gerenciada através do padrão de projeto Singleton (inclui Window e Renderer).
 - `State`: A estrutura responsável por gerenciar a lógica do jogo (nesta etapa: carregar a imagem de fundo e colocar a música para tocar).
