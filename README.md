@@ -2,8 +2,7 @@
 
 **Aluno:** Lucas Tavares Drumond  
 **Matrícula:** 231011650  
-**Turma:** 2025/2  
-**Status:** Fase Um Concluída ✅
+**Turma:** 01 - 2026/2  
 
 ## Descrição do Projeto
 
