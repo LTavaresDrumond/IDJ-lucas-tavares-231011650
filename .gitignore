@@ -1,12 +1,14 @@
-# Compilados
+# Compilados e Executáveis
 *.o
 *.exe
 *.dll
 *.out
+JOGO
 
-# Diretórios de build
+# Diretórios de build e dependências
 bin/
 obj/
+dep/
 
 # Arquivos de IDE
 .vscode/
@@ -21,11 +23,7 @@ obj/
 .DS_Store
 Thumbs.db
 
-# PDFs de orientação
-*.pdf
-Trabalhos_Jogo_L2D/*.pdf
-Tutoriais/*.pdf
-orientação (boas práticas para manter o repositório focado no código)
+# Material de Apoio e Orientações (para não inchar o repositório do Github)
 *.pdf
 Trabalhos_Jogo_L2D/*.pdf
 Tutoriais/*.pdf
