@@ -51,16 +51,11 @@ Game::Game(std::string title, int width, int height) {
         exit(1);
     }
 
-    // Criação do renderizador (Tenta acelerado primeiro, conforme as instruções do trabalho)
+    // Criação do renderizador (Conforme especificado no Trabalho 1)
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr) {
-        // Fallback: se não achar renderizador acelerado (ex: rodando em modo dummy no Linux), tenta o de software
-        std::cerr << "Aviso: Renderizador acelerado não encontrado. Tentando renderizador de software." << std::endl;
-        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-        if (renderer == nullptr) {
-            std::cerr << "Falha ao criar o renderizador: " << SDL_GetError() << std::endl;
-            exit(1);
-        }
+        std::cerr << "Falha ao criar o renderizador: " << SDL_GetError() << std::endl;
+        exit(1);
     }
 
     // Inicializa o State
