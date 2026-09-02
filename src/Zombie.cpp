@@ -15,6 +15,8 @@ Zombie::Zombie(GameObject& associated) : Component(associated), hitpoints(100), 
 }
 
 void Zombie::Damage(int damage) {
+    if (hitpoints <= 0) return; // Se já está morto, não toma dano novamente nem repete o som
+
     hitpoints -= damage;
     if (hitpoints <= 0) {
         Animator* anim = associated.GetComponent<Animator>();
