@@ -2,7 +2,7 @@
 #include "SpriteRenderer.h"
 #include "Animator.h"
 
-Zombie::Zombie(GameObject& associated) : Component(associated), hitpoints(100) {
+Zombie::Zombie(GameObject& associated) : Component(associated), hitpoints(100), deathSound(associated, "Recursos/audio/Dead.wav") {
     SpriteRenderer* sr = new SpriteRenderer(associated, "Recursos/img/Enemy.png", 3, 2);
     associated.AddComponent(sr);
 
@@ -21,6 +21,7 @@ void Zombie::Damage(int damage) {
         if (anim != nullptr) {
             anim->SetAnimation("dead");
         }
+        deathSound.Play(1);
     }
 }
 

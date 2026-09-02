@@ -1,4 +1,5 @@
 #include "Sprite.h"
+#include "Resources.h"
 #include "Game.h"
 #include <iostream>
 
@@ -11,18 +12,12 @@ Sprite::Sprite(std::string file, int frameCountW, int frameCountH)
 }
 
 Sprite::~Sprite() {
-    if (texture != nullptr) {
-        SDL_DestroyTexture(texture);
-    }
+    // Destrutor vazio pois Resources cuida da desalocação
 }
 
 void Sprite::Open(std::string file) {
-    if (texture != nullptr) {
-        SDL_DestroyTexture(texture);
-        texture = nullptr;
-    }
-
-    texture = IMG_LoadTexture(Game::GetInstance().GetRenderer(), file.c_str());
+    texture = Resources::GetImage(file);
+    
     if (texture == nullptr) {
         std::cerr << "Erro ao carregar textura " << file << ": " << SDL_GetError() << std::endl;
         return;
