@@ -8,7 +8,7 @@ Animator::Animator(GameObject& associated) : Component(associated), frameStart(0
 void Animator::Update(float dt) {
     if (frameTime == 0.0f) return;
 
-    timeElapsed += 1.0f; // Incremento manual conforme PDF pois dt ainda não está sendo passado
+    timeElapsed += dt; // Incremento baseado no delta time
 
     if (timeElapsed > frameTime) {
         currentFrame++;

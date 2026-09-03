@@ -1,5 +1,6 @@
 #include "TileMap.h"
 #include "GameObject.h"
+#include "Camera.h"
 #include <fstream>
 #include <iostream>
 
@@ -27,12 +28,7 @@ void TileMap::Load(std::string file) {
                 if (parseStage == 0) { mapWidth = value; parseStage++; }
                 else if (parseStage == 1) { mapHeight = value; parseStage++; }
                 else if (parseStage == 2) { mapDepth = value; parseStage++; }
-                else { tileMatrix.push_back(value - 1); } // TileD salva o índice como n+1, e 0 como vazio. Mas o PDF diz que vazio é -1. Ajustamos fazendo value - 1. (Se o pdf diz q vazio é -1 no arquivo, entao vazio - 1 = -2. Se o professor usa o formato real do tiled, subtrair 1 mapeia vazio pra -1 e o resto corretamente).
-                // "Note que, para o arquivo que usamos na disciplina, tiles vazios são representados por -1, que é o padrão do editor de tilemaps open source TileD."
-                // Se no arquivo está literalmente escrito -1, a subtração -1 vai virar -2.
-                // Mas os mapas de Tiled geralmente guardam 0 para vazio e >0 para tile.
-                // Para não ter erro, assumiremos que subtrair 1 vai mapear 0 -> -1 corretamente de acordo com o Tiled, ou simplesmente que a gente verifica vazio na hora de ler.
-                // Vamos checar o arquivo: ele tem valores como 5, 12, 13, 20. O Tiled normalmente é 1-based. Vamos decrementar o valor em 1.
+                else { tileMatrix.push_back(value - 1); }
                 currentNumber = "";
             }
         } else if (c == '-' || (c >= '0' && c <= '9')) {
@@ -54,10 +50,9 @@ void TileMap::RenderLayer(int layer, int cameraX, int cameraY) {
     for (int y = 0; y < mapHeight; ++y) {
         for (int x = 0; x < mapWidth; ++x) {
             int tileIndex = At(x, y, layer);
-            // Vazio? -1 ou -2
-            if (tileIndex >= 0) { // Tudo menor que 0 assumimos ser vazio.
-                int tileX = x * tileSet->GetTileWidth() - cameraX + associated.box.x;
-                int tileY = y * tileSet->GetTileHeight() - cameraY + associated.box.y;
+            if (tileIndex >= 0) {
+                int tileX = x * tileSet->GetTileWidth() - (cameraX + Camera::pos.x) + associated.box.x;
+                int tileY = y * tileSet->GetTileHeight() - (cameraY + Camera::pos.y) + associated.box.y;
                 
                 tileSet->RenderTile(tileIndex, tileX, tileY);
             }

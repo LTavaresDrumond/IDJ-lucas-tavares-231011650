@@ -3,6 +3,8 @@
 #include "Zombie.h"
 #include "TileMap.h"
 #include "TileSet.h"
+#include "InputManager.h"
+#include "Camera.h"
 
 State::State() : music("Recursos/audio/BGM.wav"), quitRequested(false) {
     music.Play(-1);
@@ -10,6 +12,7 @@ State::State() : music("Recursos/audio/BGM.wav"), quitRequested(false) {
     // Create Background GameObject
     GameObject* bgObj = new GameObject();
     SpriteRenderer* bgRenderer = new SpriteRenderer(*bgObj, "Recursos/img/Background.png");
+    bgRenderer->SetCameraFollower(true);
     bgObj->AddComponent(bgRenderer);
     AddObject(bgObj);
 
@@ -21,30 +24,6 @@ State::State() : music("Recursos/audio/BGM.wav"), quitRequested(false) {
     mapObj->box.x = 0;
     mapObj->box.y = 0;
     AddObject(mapObj);
-
-    // Create Zombie GameObject 1
-    GameObject* zombieObj1 = new GameObject();
-    zombieObj1->box.x = 600;
-    zombieObj1->box.y = 450;
-    Zombie* zombieComp1 = new Zombie(*zombieObj1);
-    zombieObj1->AddComponent(zombieComp1);
-    AddObject(zombieObj1);
-
-    // Create Zombie GameObject 2
-    GameObject* zombieObj2 = new GameObject();
-    zombieObj2->box.x = 300;
-    zombieObj2->box.y = 200;
-    Zombie* zombieComp2 = new Zombie(*zombieObj2);
-    zombieObj2->AddComponent(zombieComp2);
-    AddObject(zombieObj2);
-
-    // Create Zombie GameObject 3
-    GameObject* zombieObj3 = new GameObject();
-    zombieObj3->box.x = 800;
-    zombieObj3->box.y = 300;
-    Zombie* zombieComp3 = new Zombie(*zombieObj3);
-    zombieObj3->AddComponent(zombieComp3);
-    AddObject(zombieObj3);
 }
 
 State::~State() {
@@ -59,9 +38,22 @@ void State::LoadAssets() {
 }
 
 void State::Update(float dt) {
-    if (SDL_QuitRequested()) {
+    InputManager& input = InputManager::GetInstance();
+    
+    if (input.QuitRequested() || input.KeyPress(ESCAPE_KEY)) {
         quitRequested = true;
     }
+
+    if (input.KeyPress(SPACE_KEY)) {
+        GameObject* zombieObj = new GameObject();
+        zombieObj->box.x = input.GetMouseX() + Camera::pos.x;
+        zombieObj->box.y = input.GetMouseY() + Camera::pos.y;
+        Zombie* zombieComp = new Zombie(*zombieObj);
+        zombieObj->AddComponent(zombieComp);
+        AddObject(zombieObj);
+    }
+
+    Camera::Update(dt);
 
     for (unsigned i = 0; i < objectArray.size(); i++) {
         objectArray[i]->Update(dt);

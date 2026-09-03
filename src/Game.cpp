@@ -11,7 +11,7 @@ Game& Game::GetInstance() {
     return *instance;
 }
 
-Game::Game(std::string title, int width, int height) {
+Game::Game(std::string title, int width, int height) : frameStart(0), dt(0) {
     if (instance != nullptr) {
         std::cerr << "Erro: Uma instância do jogo já está em execução!" << std::endl;
         return;
@@ -74,9 +74,24 @@ SDL_Renderer* Game::GetRenderer() {
     return renderer;
 }
 
+void Game::CalculateDeltaTime() {
+    int newTicks = SDL_GetTicks();
+    dt = (newTicks - frameStart) / 1000.0f;
+    frameStart = newTicks;
+}
+
+float Game::GetDeltaTime() {
+    return dt;
+}
+
 void Game::Run() {
-    while (!state->QuitRequested()) {
-        state->Update(0.0f);
+    InputManager& input = InputManager::GetInstance();
+
+    while (!state->QuitRequested() && !input.QuitRequested()) {
+        CalculateDeltaTime();
+        input.Update();
+
+        state->Update(dt);
         state->Render();
         SDL_RenderPresent(renderer);
         SDL_Delay(33); 
