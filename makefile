@@ -35,9 +35,9 @@ SDL_PATHS = C:/SDL2
 
 SDL_INC_PATH += $(addsuffix /include,$(SDL_PATHS))
 LINK_PATH = $(addprefix -L,$(addsuffix /lib,$(SDL_PATHS)))
-FLAGS += -mwindows
+FLAGS += 
 DFLAGS += -mconsole
-LIBS := -lmingw32 -lSDL2main $(LIBS)
+LIBS := -lmingw32 -lSDL2main $(LIBS) -static-libgcc -static-libstdc++
 
 EXEC := $(EXEC).exe
 

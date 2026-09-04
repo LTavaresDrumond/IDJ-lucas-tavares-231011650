@@ -92,6 +92,7 @@ void Game::Run() {
         input.Update();
 
         state->Update(dt);
+        SDL_RenderClear(renderer);
         state->Render();
         SDL_RenderPresent(renderer);
         SDL_Delay(33); 
