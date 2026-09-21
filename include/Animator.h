@@ -14,6 +14,9 @@ private:
     float timeElapsed;
 
 public:
+    std::string current;
+    SDL_RendererFlip flip;
+
     Animator(GameObject& associated);
     void Update(float dt) override;
     void Render() override;

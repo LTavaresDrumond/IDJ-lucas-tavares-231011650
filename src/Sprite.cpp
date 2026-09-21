@@ -3,11 +3,11 @@
 #include "Game.h"
 #include <iostream>
 
-Sprite::Sprite() : texture(nullptr), width(0), height(0), frameCountW(1), frameCountH(1) {
+Sprite::Sprite() : texture(nullptr), width(0), height(0), frameCountW(1), frameCountH(1), scale(1.0f, 1.0f) {
 }
 
 Sprite::Sprite(std::string file, int frameCountW, int frameCountH) 
-    : texture(nullptr), width(0), height(0), frameCountW(frameCountW), frameCountH(frameCountH) {
+    : texture(nullptr), width(0), height(0), frameCountW(frameCountW), frameCountH(frameCountH), scale(1.0f, 1.0f) {
     Open(file);
 }
 
@@ -34,14 +34,15 @@ void Sprite::SetClip(int x, int y, int w, int h) {
     clipRect.h = h;
 }
 
-void Sprite::Render(int x, int y, int w, int h) {
+void Sprite::Render(int x, int y, int w, int h, float angle, SDL_RendererFlip flip) {
     SDL_Rect dstRect;
     dstRect.x = x;
     dstRect.y = y;
     dstRect.w = w;
     dstRect.h = h;
 
-    SDL_RenderCopy(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstRect);
+    SDL_Point center = {w/2, h/2};
+    SDL_RenderCopyEx(Game::GetInstance().GetRenderer(), texture, &clipRect, &dstRect, angle, &center, flip);
 }
 
 void Sprite::Render(int x, int y) {
@@ -69,12 +70,21 @@ void Sprite::SetFrameCount(int frameCountW, int frameCountH) {
     this->frameCountH = frameCountH;
 }
 
+void Sprite::SetScale(float scaleX, float scaleY) {
+    scale.x = scaleX;
+    scale.y = scaleY;
+}
+
+Vec2 Sprite::GetScale() {
+    return scale;
+}
+
 int Sprite::GetWidth() {
-    return width / frameCountW;
+    return (width / frameCountW) * scale.x;
 }
 
 int Sprite::GetHeight() {
-    return height / frameCountH;
+    return (height / frameCountH) * scale.y;
 }
 
 bool Sprite::IsOpen() {

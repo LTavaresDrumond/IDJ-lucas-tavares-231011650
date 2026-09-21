@@ -2,7 +2,7 @@
 #include "SpriteRenderer.h"
 #include "GameObject.h"
 
-Animator::Animator(GameObject& associated) : Component(associated), frameStart(0), frameEnd(0), frameTime(0), currentFrame(0), timeElapsed(0) {
+Animator::Animator(GameObject& associated) : Component(associated), frameStart(0), frameEnd(0), frameTime(0), currentFrame(0), timeElapsed(0), current(""), flip(SDL_FLIP_NONE) {
 }
 
 void Animator::Update(float dt) {
@@ -21,6 +21,7 @@ void Animator::Update(float dt) {
         SpriteRenderer* sr = associated.GetComponent<SpriteRenderer>();
         if (sr != nullptr) {
             sr->SetFrame(currentFrame);
+            sr->SetFlip(flip);
         }
     }
 }
@@ -29,6 +30,7 @@ void Animator::Render() {
 }
 
 void Animator::SetAnimation(std::string name) {
+    if (current == name) return;
     auto it = animations.find(name);
     if (it != animations.end()) {
         frameStart = it->second.frameStart;
@@ -36,10 +38,13 @@ void Animator::SetAnimation(std::string name) {
         frameTime = it->second.frameTime;
         currentFrame = frameStart;
         timeElapsed = 0.0f;
+        flip = it->second.flip;
+        current = name;
 
         SpriteRenderer* sr = associated.GetComponent<SpriteRenderer>();
         if (sr != nullptr) {
             sr->SetFrame(currentFrame);
+            sr->SetFlip(flip);
         }
     }
 }

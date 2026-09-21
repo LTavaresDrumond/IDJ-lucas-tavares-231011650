@@ -8,13 +8,16 @@ class GameObject {
 private:
     std::vector<Component*> components;
     bool isDead;
+    bool started;
 
 public:
     Rect box;
+    double angleDeg;
 
     GameObject();
     ~GameObject();
 
+    void Start();
     void Update(float dt);
     void Render();
     bool IsDead() const;

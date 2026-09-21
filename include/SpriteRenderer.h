@@ -9,6 +9,8 @@ private:
     bool cameraFollower;
 
 public:
+    SDL_RendererFlip flip;
+
     SpriteRenderer(GameObject& associated);
     SpriteRenderer(GameObject& associated, std::string file, int frameCountW = 1, int frameCountH = 1);
     
@@ -18,6 +20,10 @@ public:
     
     void SetCameraFollower(bool follower);
     bool IsCameraFollower();
+
+    void SetFlip(SDL_RendererFlip flip);
+    void SetScale(float scaleX, float scaleY);
+    Vec2 GetScale();
 
     void Update(float dt) override;
     void Render() override;
