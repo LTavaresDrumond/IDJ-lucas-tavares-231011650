@@ -27,3 +27,7 @@ Thumbs.db
 *.pdf
 Trabalhos_Jogo_L2D/*.pdf
 Tutoriais/*.pdf
+extract_pdf.py
+read_pdf.py
+check_img.py
+phase5.txt

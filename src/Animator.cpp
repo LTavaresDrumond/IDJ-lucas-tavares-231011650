@@ -30,9 +30,10 @@ void Animator::Render() {
 }
 
 void Animator::SetAnimation(std::string name) {
-    if (current == name) return;
     auto it = animations.find(name);
     if (it != animations.end()) {
+        if (current == name && frameStart == it->second.frameStart && frameEnd == it->second.frameEnd && flip == it->second.flip) return;
+
         frameStart = it->second.frameStart;
         frameEnd = it->second.frameEnd;
         frameTime = it->second.frameTime;
@@ -50,8 +51,5 @@ void Animator::SetAnimation(std::string name) {
 }
 
 void Animator::AddAnimation(std::string name, Animation anim) {
-    auto it = animations.find(name);
-    if (it == animations.end()) {
-        animations[name] = anim;
-    }
+    animations[name] = anim;
 }
