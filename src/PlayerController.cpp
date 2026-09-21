@@ -25,6 +25,11 @@ void PlayerController::Update(float dt) {
             moveDir = moveDir.GetNormalized();
             Character::player->Issue(Character::Command(Character::MOVE, moveDir.x, moveDir.y));
         }
+
+        if (input.MousePress(LEFT_MOUSE_BUTTON)) {
+            Vec2 target(input.GetMouseX() + Camera::pos.x, input.GetMouseY() + Camera::pos.y);
+            Character::player->Issue(Character::Command(Character::SHOOT, target.x, target.y));
+        }
     }
 }
 

@@ -1,3 +1,3 @@
 @echo off
-set PATH=%PATH%;C:\msys64\ucrt64\bin
+set PATH=%PATH%;C:\msys64\ucrt64\bin;C:\SDL2\bin
 .\JOGO.exe

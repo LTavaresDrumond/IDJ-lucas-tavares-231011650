@@ -2,6 +2,7 @@
 #include "SpriteRenderer.h"
 #include "Animator.h"
 #include "Game.h"
+#include "Gun.h"
 
 Character* Character::player = nullptr;
 
@@ -16,7 +17,7 @@ Character::Character(GameObject& associated, std::string sprite)
     Animator* anim = new Animator(associated);
     anim->AddAnimation("idle", Animation(1, 1, 0.0f));
     anim->AddAnimation("walking", Animation(0, 2, 0.15f));
-    anim->AddAnimation("dead", Animation(0, 0, 0.1f)); 
+    anim->AddAnimation("dead", Animation(10, 10, 0.1f)); // Frame da lápide na última linha
     associated.AddComponent(anim);
 }
 
@@ -27,6 +28,11 @@ Character::~Character() {
 }
 
 void Character::Start() {
+    GameObject* gunGo = new GameObject();
+    std::shared_ptr<GameObject> characterPtr = Game::GetInstance().GetState().GetObjectPtr(&associated).lock();
+    Gun* gunComp = new Gun(*gunGo, characterPtr);
+    gunGo->AddComponent(gunComp);
+    gun = Game::GetInstance().GetState().AddObject(gunGo);
 }
 
 void Character::Update(float dt) {
@@ -49,7 +55,13 @@ void Character::Update(float dt) {
             associated.box.y += speed.y * dt;
             moved = true;
         } else if (cmd.type == SHOOT) {
-            // TODO: Gun Shoot
+            std::shared_ptr<GameObject> gunPtr = gun.lock();
+            if (gunPtr) {
+                Gun* gunComp = gunPtr->GetComponent<Gun>();
+                if (gunComp) {
+                    gunComp->Shoot(cmd.pos);
+                }
+            }
         }
         taskQueue.pop(); // Remove action after executing
     }
@@ -68,9 +80,9 @@ void Character::Update(float dt) {
             if (speed.y > 0) { // Down (Row 0)
                 anim->AddAnimation("walking", Animation(0, 2, 0.15f, SDL_FLIP_NONE));
                 anim->AddAnimation("idle",    Animation(1, 1, 0.0f,  SDL_FLIP_NONE));
-            } else { // Up (Row 3)
-                anim->AddAnimation("walking", Animation(9, 11, 0.15f, SDL_FLIP_NONE));
-                anim->AddAnimation("idle",    Animation(10, 10, 0.0f, SDL_FLIP_NONE));
+            } else { // Up (Mesmo do Down, já que não tem sprite para cima)
+                anim->AddAnimation("walking", Animation(0, 2, 0.15f, SDL_FLIP_NONE));
+                anim->AddAnimation("idle",    Animation(1, 1, 0.0f,  SDL_FLIP_NONE));
             }
         }
         anim->SetAnimation("walking");
