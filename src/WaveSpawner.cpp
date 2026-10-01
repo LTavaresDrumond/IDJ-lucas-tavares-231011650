@@ -12,6 +12,7 @@ WaveSpawner::WaveSpawner(GameObject& associated) : Component(associated), curren
     waves.push_back({3, 0, 2.0f});
     waves.push_back({5, 1, 1.5f});
     waves.push_back({10, 2, 1.0f});
+    waves.push_back({15, 3, 0.8f}); // Wave 4: 15 zombies, 3 npcs
     
     if (waves.size() > 0) {
         zombiesToSpawn = waves[0].zombies;
@@ -62,7 +63,7 @@ void WaveSpawner::Update(float dt) {
                 Collider* zombieCol = new Collider(*zombieObj);
                 zombieObj->AddComponent(zombieCol);
                 
-                Game::GetInstance().GetState().AddObject(zombieObj);
+                Game::GetInstance().GetCurrentState().AddObject(zombieObj);
                 zombiesToSpawn--;
             } else {
                 GameObject* npcObj = new GameObject();
@@ -78,7 +79,7 @@ void WaveSpawner::Update(float dt) {
                 Collider* colComp = new Collider(*npcObj);
                 npcObj->AddComponent(colComp);
                 
-                Game::GetInstance().GetState().AddObject(npcObj);
+                Game::GetInstance().GetCurrentState().AddObject(npcObj);
                 npcsToSpawn--;
             }
         }
@@ -96,3 +97,7 @@ void WaveSpawner::Update(float dt) {
 }
 
 void WaveSpawner::Render() {}
+
+bool WaveSpawner::IsFinished() {
+    return currentWave >= (int)waves.size() && Zombie::aliveCount == 0 && zombiesToSpawn == 0;
+}

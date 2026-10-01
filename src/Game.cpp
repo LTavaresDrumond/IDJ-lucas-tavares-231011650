@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "State.h"
 #include "Resources.h"
 #include <iostream>
 #include <cstdlib>
@@ -13,7 +14,7 @@ Game& Game::GetInstance() {
     return *instance;
 }
 
-Game::Game(std::string title, int width, int height) : frameStart(0), dt(0) {
+Game::Game(std::string title, int width, int height) : storedState(nullptr), frameStart(0), dt(0) {
     srand(time(NULL));
     if (instance != nullptr) {
         std::cerr << "Erro: Uma instância do jogo já está em execução!" << std::endl;
@@ -44,6 +45,11 @@ Game::Game(std::string title, int width, int height) : frameStart(0), dt(0) {
     }
     Mix_AllocateChannels(32);
 
+    if (TTF_Init() != 0) {
+        std::cerr << "Falha na inicialização da SDL_ttf: " << TTF_GetError() << std::endl;
+        exit(1);
+    }
+
     window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, 0);
     if (window == nullptr) {
         std::cerr << "Falha ao criar a janela: " << SDL_GetError() << std::endl;
@@ -55,26 +61,39 @@ Game::Game(std::string title, int width, int height) : frameStart(0), dt(0) {
         std::cerr << "Falha ao criar o renderizador: " << SDL_GetError() << std::endl;
         exit(1);
     }
-
-    state = new State();
 }
 
 Game::~Game() {
-    delete state;
+    if (storedState != nullptr) {
+        delete storedState;
+        storedState = nullptr;
+    }
+    while (!stateStack.empty()) {
+        stateStack.pop();
+    }
+    Resources::ClearImages();
+    Resources::ClearMusics();
+    Resources::ClearSounds();
+    Resources::ClearFonts();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     Mix_CloseAudio();
     Mix_Quit();
     IMG_Quit();
+    TTF_Quit();
     SDL_Quit();
 }
 
-State& Game::GetState() {
-    return *state;
+State& Game::GetCurrentState() {
+    return *stateStack.top();
 }
 
 SDL_Renderer* Game::GetRenderer() {
     return renderer;
+}
+
+void Game::Push(State* state) {
+    storedState = state;
 }
 
 void Game::CalculateDeltaTime() {
@@ -89,19 +108,54 @@ float Game::GetDeltaTime() {
 
 void Game::Run() {
     InputManager& input = InputManager::GetInstance();
-    state->Start();
 
-    while (!state->QuitRequested() && !input.QuitRequested()) {
+    // Empilhar o estado inicial (que foi Push-ado pela main)
+    if (storedState != nullptr) {
+        stateStack.emplace(storedState);
+        storedState = nullptr;
+        stateStack.top()->Start();
+    } else {
+        return; // Sem estado inicial, não roda
+    }
+
+    while (!stateStack.empty() && !stateStack.top()->QuitRequested()) {
+        // Gerenciar a pilha: verificar se o estado atual quer ser desempilhado
+        if (stateStack.top()->PopRequested()) {
+            stateStack.pop();
+            if (!stateStack.empty()) {
+                stateStack.top()->Resume();
+            }
+        }
+
+        // Se há um estado armazenado, empilhá-lo
+        if (storedState != nullptr) {
+            if (!stateStack.empty()) {
+                stateStack.top()->Pause();
+            }
+            stateStack.emplace(storedState);
+            storedState = nullptr;
+            stateStack.top()->Start();
+        }
+
+        // Se a pilha ficou vazia após o pop, sair
+        if (stateStack.empty()) break;
+
         CalculateDeltaTime();
         input.Update();
 
-        state->Update(dt);
+        stateStack.top()->Update(dt);
         SDL_RenderClear(renderer);
-        state->Render();
+        stateStack.top()->Render();
         SDL_RenderPresent(renderer);
-        SDL_Delay(33); 
+        SDL_Delay(33);
+    }
+
+    // Limpar a pilha antes de liberar recursos
+    while (!stateStack.empty()) {
+        stateStack.pop();
     }
     Resources::ClearImages();
     Resources::ClearMusics();
     Resources::ClearSounds();
+    Resources::ClearFonts();
 }

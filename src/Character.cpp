@@ -2,6 +2,7 @@
 #include "SpriteRenderer.h"
 #include "Animator.h"
 #include "Game.h"
+#include "State.h"
 #include "Gun.h"
 #include "Camera.h"
 #include "Bullet.h"
@@ -33,10 +34,10 @@ Character::~Character() {
 
 void Character::Start() {
     GameObject* gunGo = new GameObject();
-    std::shared_ptr<GameObject> characterPtr = Game::GetInstance().GetState().GetObjectPtr(&associated).lock();
+    std::shared_ptr<GameObject> characterPtr = Game::GetInstance().GetCurrentState().GetObjectPtr(&associated).lock();
     Gun* gunComp = new Gun(*gunGo, characterPtr);
     gunGo->AddComponent(gunComp);
-    gun = Game::GetInstance().GetState().AddObject(gunGo);
+    gun = Game::GetInstance().GetCurrentState().AddObject(gunGo);
 }
 
 void Character::Update(float dt) {
@@ -60,12 +61,15 @@ void Character::Update(float dt) {
             associated.box.x += speed.x * dt;
             associated.box.y += speed.y * dt;
             
-            // Limitar ao mapa (40 tiles * 64px = 2560px)
-            float mapSize = 2560.0f;
-            if (associated.box.x < 0) associated.box.x = 0;
-            if (associated.box.y < 0) associated.box.y = 0;
-            if (associated.box.x + associated.box.w > mapSize) associated.box.x = mapSize - associated.box.w;
-            if (associated.box.y + associated.box.h > mapSize) associated.box.y = mapSize - associated.box.h;
+            // Limitar ao mapa (Fences estão no índice 0 e 39)
+            float minX = 64.0f;
+            float minY = 64.0f;
+            float maxX = 2560.0f - 64.0f;
+            float maxY = 2560.0f - 64.0f;
+            if (associated.box.x < minX) associated.box.x = minX;
+            if (associated.box.y < minY) associated.box.y = minY;
+            if (associated.box.x + associated.box.w > maxX) associated.box.x = maxX - associated.box.w;
+            if (associated.box.y + associated.box.h > maxY) associated.box.y = maxY - associated.box.h;
             
             moved = true;
         } else if (cmd.type == SHOOT) {

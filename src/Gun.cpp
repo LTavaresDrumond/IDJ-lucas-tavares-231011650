@@ -113,6 +113,6 @@ void Gun::Shoot(Vec2 target) {
         Bullet* bullet = new Bullet(*bulletGo, angle, 400.0f, 10, 800.0f, targetsPlayer, charPtr);
         bulletGo->AddComponent(bullet);
         
-        Game::GetInstance().GetState().AddObject(bulletGo);
+        Game::GetInstance().GetCurrentState().AddObject(bulletGo);
     }
 }

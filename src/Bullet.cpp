@@ -52,14 +52,7 @@ void Bullet::NotifyCollision(GameObject& other) {
     Character* charComp = other.GetComponent<Character>();
     Zombie* zombie = other.GetComponent<Zombie>();
 
-    if (charComp != nullptr) {
-        // Bala que targetsPlayer só acerta o player; bala que !targetsPlayer só acerta NPCs
-        if (targetsPlayer && charComp == Character::player) {
-            associated.RequestDelete();
-        } else if (!targetsPlayer && charComp != Character::player) {
-            associated.RequestDelete();
-        }
-    } else if (zombie != nullptr && !targetsPlayer) {
+    if (charComp != nullptr || zombie != nullptr) {
         associated.RequestDelete();
     }
 }
