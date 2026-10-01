@@ -37,8 +37,8 @@ with open('Recursos/map/map.txt', 'w') as f:
                 # Borda superior e inferior: Cerca horizontal
                 row.append("18")
             elif x == 0 or x == width - 1:
-                # Borda esquerda e direita: Cerca vertical
-                row.append("11")
+                # Borda esquerda e direita: Cerca vertical reta
+                row.append("5")
             else:
                 row.append("0") # Vazio
         f.write(",".join(row) + ",\n")
