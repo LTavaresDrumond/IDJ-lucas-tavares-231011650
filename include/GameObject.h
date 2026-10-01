@@ -24,6 +24,7 @@ public:
     void RequestDelete();
     void AddComponent(Component* cpt);
     void RemoveComponent(Component* cpt);
+    void NotifyCollision(GameObject& other);
 
     template <typename T>
     T* GetComponent() {

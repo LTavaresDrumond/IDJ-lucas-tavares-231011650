@@ -3,11 +3,18 @@
 #include "Animator.h"
 #include "InputManager.h"
 #include "Camera.h"
+#include "Bullet.h"
+#include "Character.h"
+#include "Collider.h"
+
+
+int Zombie::aliveCount = 0;
 
 Zombie::Zombie(GameObject& associated) 
     : Component(associated), hitpoints(10), deathSound(associated, "Recursos/audio/Dead.wav"), 
-      hitSound(associated, "Recursos/audio/Hit0.wav"), hit(false) {
+    hitSound(associated, "Recursos/audio/Hit0.wav"), hit(false) {
     
+    aliveCount++;
     SpriteRenderer* sr = new SpriteRenderer(associated, "Recursos/img/Enemy.png", 3, 2);
     associated.AddComponent(sr);
 
@@ -31,6 +38,12 @@ void Zombie::Damage(int damage) {
             anim->SetAnimation("dead");
         }
         deathSound.Play(1);
+        
+        Collider* col = associated.GetComponent<Collider>();
+        if (col != nullptr) {
+            associated.RemoveComponent(col);
+            delete col;
+        }
     } else {
         hit = true;
         hitTimer.Restart();
@@ -39,6 +52,10 @@ void Zombie::Damage(int damage) {
         }
         hitSound.Play(1);
     }
+}
+
+Zombie::~Zombie() {
+    aliveCount--;
 }
 
 void Zombie::Update(float dt) {
@@ -59,18 +76,36 @@ void Zombie::Update(float dt) {
                 anim->SetAnimation("walking");
             }
         }
-    }
-
-    InputManager& input = InputManager::GetInstance();
-    if (input.MousePress(LEFT_MOUSE_BUTTON)) {
-        float mouseX = input.GetMouseX() + Camera::pos.x;
-        float mouseY = input.GetMouseY() + Camera::pos.y;
+    } else if (hitpoints > 0 && Character::player != nullptr) {
+        Vec2 playerPos = Character::player->GetAssociated().box.GetCenter();
+        Vec2 zombiePos = associated.box.GetCenter();
         
-        if (associated.box.Contains(mouseX, mouseY)) {
-            Damage(2); // Aplica uma quantidade arbitrária de dano (ex: 2 para precisar de 5 hits se hitpoints = 10)
+        float distance = zombiePos.Distance(playerPos);
+        if (distance > 30.0f) { // Ajuste fino para não sobrepor completamente
+            Vec2 dir = (playerPos - zombiePos).GetNormalized();
+            float speedMag = 50.0f; // Velocidade do zumbi
+            associated.box.x += dir.x * speedMag * dt;
+            associated.box.y += dir.y * speedMag * dt;
+            
+            // Apenas para virar o sprite na horizontal baseado no movimento
+            SpriteRenderer* sr = associated.GetComponent<SpriteRenderer>();
+            if (sr != nullptr) {
+                if (dir.x < 0) {
+                    sr->SetFlip(SDL_FLIP_HORIZONTAL);
+                } else {
+                    sr->SetFlip(SDL_FLIP_NONE);
+                }
+            }
         }
     }
 }
 
 void Zombie::Render() {
+}
+
+void Zombie::NotifyCollision(GameObject& other) {
+    Bullet* bullet = other.GetComponent<Bullet>();
+    if (bullet != nullptr && !bullet->targetsPlayer) {
+        Damage(bullet->GetDamage());
+    }
 }

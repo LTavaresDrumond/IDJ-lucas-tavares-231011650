@@ -14,8 +14,14 @@ private:
     bool hit;
 
 public:
+    static int aliveCount;
+
+    GameObject& GetAssociated() { return associated; }
+
     Zombie(GameObject& associated);
+    ~Zombie();
     void Damage(int damage);
     void Update(float dt) override;
     void Render() override;
+    void NotifyCollision(GameObject& other) override;
 };

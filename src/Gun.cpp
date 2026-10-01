@@ -6,6 +6,7 @@
 #include "Bullet.h"
 #include "InputManager.h"
 #include "Camera.h"
+#include "Character.h"
 #include <cmath>
 
 Gun::Gun(GameObject& associated, std::weak_ptr<GameObject> character) 
@@ -37,11 +38,18 @@ void Gun::Update(float dt) {
     associated.box.x = charPtr->box.x + charPtr->box.w / 2.0f - associated.box.w / 2.0f;
     associated.box.y = charPtr->box.y + charPtr->box.h / 2.0f - associated.box.h / 2.0f;
 
-    Vec2 mousePos(InputManager::GetInstance().GetMouseX() + Camera::pos.x, InputManager::GetInstance().GetMouseY() + Camera::pos.y);
+    Character* charCmp = charPtr->GetComponent<Character>();
     Vec2 center(associated.box.x + associated.box.w / 2.0f, associated.box.y + associated.box.h / 2.0f);
-    Vec2 diff = mousePos - center;
+    Vec2 diff;
     
-    angle = diff.Inclination();
+    if (charCmp && Character::player == charCmp) {
+        Vec2 mousePos(InputManager::GetInstance().GetMouseX() + Camera::pos.x, InputManager::GetInstance().GetMouseY() + Camera::pos.y);
+        diff = mousePos - center;
+        angle = diff.Inclination();
+    } else {
+        diff = Vec2(cos(angle), sin(angle));
+    }
+    
     associated.angleDeg = angle * 180.0f / 3.14159265f;
 
     // Posiciona arma a uma distancia do personagem
@@ -96,7 +104,13 @@ void Gun::Shoot(Vec2 target) {
         bulletGo->box.x = center.x; // Centraliza a criacao
         bulletGo->box.y = center.y;
         
-        Bullet* bullet = new Bullet(*bulletGo, angle, 400.0f, 10, 800.0f);
+        bool targetsPlayer = true;
+        std::shared_ptr<GameObject> charPtr = character.lock();
+        if (charPtr && charPtr->GetComponent<Character>() == Character::player) {
+            targetsPlayer = false;
+        }
+
+        Bullet* bullet = new Bullet(*bulletGo, angle, 400.0f, 10, 800.0f, targetsPlayer, charPtr);
         bulletGo->AddComponent(bullet);
         
         Game::GetInstance().GetState().AddObject(bulletGo);

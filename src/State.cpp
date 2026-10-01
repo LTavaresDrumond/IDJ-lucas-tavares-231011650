@@ -7,6 +7,9 @@
 #include "Camera.h"
 #include "Character.h"
 #include "PlayerController.h"
+#include "Collider.h"
+#include "Collision.h"
+#include "WaveSpawner.h"
 
 State::State() : music("Recursos/audio/BGM.wav"), quitRequested(false), started(false) {
     music.Play(-1);
@@ -35,11 +38,22 @@ State::State() : music("Recursos/audio/BGM.wav"), quitRequested(false), started(
     PlayerController* controller = new PlayerController(*playerObj);
     playerObj->AddComponent(controller);
     
+    Collider* playerCol = new Collider(*playerObj);
+    playerObj->AddComponent(playerCol);
+    
+    Character::player = character;
+
     playerObj->box.x = 512;
     playerObj->box.y = 512;
     AddObject(playerObj);
 
     Camera::Follow(playerObj);
+
+    // Wave Spawner
+    GameObject* spawnerObj = new GameObject();
+    WaveSpawner* spawner = new WaveSpawner(*spawnerObj);
+    spawnerObj->AddComponent(spawner);
+    AddObject(spawnerObj);
 }
 
 State::~State() {
@@ -68,19 +82,31 @@ void State::Update(float dt) {
         quitRequested = true;
     }
 
-    if (input.KeyPress(SPACE_KEY)) {
-        GameObject* zombieObj = new GameObject();
-        zombieObj->box.x = input.GetMouseX() + Camera::pos.x;
-        zombieObj->box.y = input.GetMouseY() + Camera::pos.y;
-        Zombie* zombieComp = new Zombie(*zombieObj);
-        zombieObj->AddComponent(zombieComp);
-        AddObject(zombieObj);
-    }
+
 
     Camera::Update(dt);
 
     for (unsigned i = 0; i < objectArray.size(); i++) {
         objectArray[i]->Update(dt);
+    }
+
+    // Detecção de colisões
+    for (unsigned i = 0; i < objectArray.size(); i++) {
+        Collider* colA = objectArray[i]->GetComponent<Collider>();
+        if (colA == nullptr) continue;
+
+        for (unsigned j = i + 1; j < objectArray.size(); j++) {
+            Collider* colB = objectArray[j]->GetComponent<Collider>();
+            if (colB == nullptr) continue;
+
+            float angleA = objectArray[i]->angleDeg * 3.14159265f / 180.0f;
+            float angleB = objectArray[j]->angleDeg * 3.14159265f / 180.0f;
+
+            if (Collision::IsColliding(colA->box, colB->box, angleA, angleB)) {
+                objectArray[i]->NotifyCollision(*objectArray[j]);
+                objectArray[j]->NotifyCollision(*objectArray[i]);
+            }
+        }
     }
 
     for (unsigned i = 0; i < objectArray.size(); i++) {

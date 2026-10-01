@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Resources.h"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 Game* Game::instance = nullptr;
 
@@ -12,6 +14,7 @@ Game& Game::GetInstance() {
 }
 
 Game::Game(std::string title, int width, int height) : frameStart(0), dt(0) {
+    srand(time(NULL));
     if (instance != nullptr) {
         std::cerr << "Erro: Uma instância do jogo já está em execução!" << std::endl;
         return;

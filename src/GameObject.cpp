@@ -51,3 +51,9 @@ void GameObject::RemoveComponent(Component* cpt) {
         components.erase(it);
     }
 }
+
+void GameObject::NotifyCollision(GameObject& other) {
+    for (unsigned i = 0; i < components.size(); i++) {
+        components[i]->NotifyCollision(other);
+    }
+}
