@@ -31,3 +31,4 @@ extract_pdf.py
 read_pdf.py
 check_img.py
 phase5.txt
+*.py
