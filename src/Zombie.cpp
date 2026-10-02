@@ -42,7 +42,6 @@ void Zombie::Damage(int damage) {
         Collider* col = associated.GetComponent<Collider>();
         if (col != nullptr) {
             associated.RemoveComponent(col);
-            delete col;
         }
     } else {
         hit = true;

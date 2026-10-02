@@ -20,7 +20,7 @@ public:
 
     static Character* player;
 
-    Character(GameObject& associated, std::string sprite);
+    Character(GameObject& associated, const std::string& sprite);
     ~Character();
 
     GameObject& GetAssociated() { return associated; }

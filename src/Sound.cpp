@@ -5,7 +5,7 @@
 Sound::Sound(GameObject& associated) : Component(associated), chunk(nullptr), channel(-1) {
 }
 
-Sound::Sound(GameObject& associated, std::string file) : Sound(associated) {
+Sound::Sound(GameObject& associated, const std::string& file) : Sound(associated) {
     Open(file);
 }
 
@@ -25,7 +25,7 @@ void Sound::Stop() {
     }
 }
 
-void Sound::Open(std::string file) {
+void Sound::Open(const std::string& file) {
     chunk = Resources::GetSound(file);
     if (chunk == nullptr) {
         std::cerr << "Erro ao carregar o audio: " << file << ". " << SDL_GetError() << std::endl;

@@ -12,9 +12,9 @@ public:
     SDL_RendererFlip flip;
 
     SpriteRenderer(GameObject& associated);
-    SpriteRenderer(GameObject& associated, std::string file, int frameCountW = 1, int frameCountH = 1);
+    SpriteRenderer(GameObject& associated, const std::string& file, int frameCountW = 1, int frameCountH = 1);
     
-    void Open(std::string file);
+    void Open(const std::string& file);
     void SetFrameCount(int frameCountW, int frameCountH);
     void SetFrame(int frame);
     

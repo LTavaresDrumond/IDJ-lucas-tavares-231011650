@@ -29,7 +29,7 @@ void Animator::Update(float dt) {
 void Animator::Render() {
 }
 
-void Animator::SetAnimation(std::string name) {
+void Animator::SetAnimation(const std::string& name) {
     auto it = animations.find(name);
     if (it != animations.end()) {
         if (current == name && frameStart == it->second.frameStart && frameEnd == it->second.frameEnd && flip == it->second.flip) return;
@@ -50,6 +50,6 @@ void Animator::SetAnimation(std::string name) {
     }
 }
 
-void Animator::AddAnimation(std::string name, Animation anim) {
+void Animator::AddAnimation(const std::string& name, Animation anim) {
     animations[name] = anim;
 }

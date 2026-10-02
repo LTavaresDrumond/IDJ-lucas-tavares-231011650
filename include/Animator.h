@@ -20,6 +20,6 @@ public:
     Animator(GameObject& associated);
     void Update(float dt) override;
     void Render() override;
-    void SetAnimation(std::string name);
-    void AddAnimation(std::string name, Animation anim);
+    void SetAnimation(const std::string& name);
+    void AddAnimation(const std::string& name, Animation anim);
 };

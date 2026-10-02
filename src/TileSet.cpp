@@ -1,6 +1,6 @@
 #include "TileSet.h"
 
-TileSet::TileSet(int tileWidth, int tileHeight, std::string file) 
+TileSet::TileSet(int tileWidth, int tileHeight, const std::string& file) 
     : tileSet(file), tileWidth(tileWidth), tileHeight(tileHeight) {
     if (tileSet.IsOpen()) {
         columns = tileSet.GetWidth() / tileWidth;
@@ -12,7 +12,7 @@ TileSet::TileSet(int tileWidth, int tileHeight, std::string file)
 }
 
 void TileSet::RenderTile(unsigned index, float x, float y) {
-    if (index >= 0 && index < (unsigned)(columns * rows)) {
+    if (index < (unsigned)(columns * rows)) {
         int tileX = (index % columns) * tileWidth;
         int tileY = (index / columns) * tileHeight;
 

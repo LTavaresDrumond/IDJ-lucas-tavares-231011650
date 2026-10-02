@@ -6,7 +6,7 @@
 Sprite::Sprite() : texture(nullptr), width(0), height(0), frameCountW(1), frameCountH(1), scale(1.0f, 1.0f) {
 }
 
-Sprite::Sprite(std::string file, int frameCountW, int frameCountH) 
+Sprite::Sprite(const std::string& file, int frameCountW, int frameCountH) 
     : texture(nullptr), width(0), height(0), frameCountW(frameCountW), frameCountH(frameCountH), scale(1.0f, 1.0f) {
     Open(file);
 }
@@ -15,7 +15,7 @@ Sprite::~Sprite() {
     // Destrutor vazio pois Resources cuida da desalocação
 }
 
-void Sprite::Open(std::string file) {
+void Sprite::Open(const std::string& file) {
     texture = Resources::GetImage(file);
     
     if (texture == nullptr) {

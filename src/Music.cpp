@@ -6,7 +6,7 @@ Music::Music() {
     music = nullptr;
 }
 
-Music::Music(std::string file) {
+Music::Music(const std::string& file) {
     music = nullptr;
     Open(file);
 }
@@ -25,7 +25,7 @@ void Music::Stop(int msToStop) {
     Mix_FadeOutMusic(msToStop);
 }
 
-void Music::Open(std::string file) {
+void Music::Open(const std::string& file) {
     music = Resources::GetMusic(file);
     if (music == nullptr) {
         std::cerr << "Erro ao carregar música " << file << ": " << SDL_GetError() << std::endl;

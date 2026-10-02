@@ -14,7 +14,7 @@ Game& Game::GetInstance() {
     return *instance;
 }
 
-Game::Game(std::string title, int width, int height) : storedState(nullptr), frameStart(0), dt(0) {
+Game::Game(const std::string& title, int width, int height) : storedState(nullptr), frameStart(0), dt(0) {
     srand(time(NULL));
     if (instance != nullptr) {
         std::cerr << "Erro: Uma instância do jogo já está em execução!" << std::endl;
@@ -82,6 +82,7 @@ Game::~Game() {
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();
+    instance = nullptr;
 }
 
 State& Game::GetCurrentState() {

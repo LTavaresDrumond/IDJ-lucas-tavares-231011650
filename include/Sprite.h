@@ -8,9 +8,9 @@
 class Sprite {
 public:
     Sprite();
-    Sprite(std::string file, int frameCountW = 1, int frameCountH = 1);
+    Sprite(const std::string& file, int frameCountW = 1, int frameCountH = 1);
     ~Sprite();
-    void Open(std::string file);
+    void Open(const std::string& file);
     void SetClip(int x, int y, int w, int h);
     void Render(int x, int y, int w, int h, float angle = 0.0f, SDL_RendererFlip flip = SDL_FLIP_NONE);
     void Render(int x, int y); // Antigo para não quebrar outras coisas, ou adaptar o novo

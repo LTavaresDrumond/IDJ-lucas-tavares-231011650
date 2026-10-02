@@ -11,7 +11,7 @@
 
 Character* Character::player = nullptr;
 
-Character::Character(GameObject& associated, std::string sprite) 
+Character::Character(GameObject& associated, const std::string& sprite) 
     : Component(associated), speed(0,0), hp(100), linearSpeed(200.0f), 
       hitSound(associated, "Recursos/audio/Hit1.wav"), deathSound(associated, "Recursos/audio/Dead.wav") {
 
@@ -150,7 +150,6 @@ void Character::NotifyCollision(GameObject& other) {
             Collider* col = associated.GetComponent<Collider>();
             if (col != nullptr) {
                 associated.RemoveComponent(col);
-                delete col;
             }
 
             std::shared_ptr<GameObject> g = gun.lock();

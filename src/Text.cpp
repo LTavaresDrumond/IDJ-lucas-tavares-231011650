@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include <iostream>
 
-Text::Text(GameObject& associated, std::string fontFile, int fontSize, TextStyle style, std::string text, SDL_Color color)
+Text::Text(GameObject& associated, const std::string& fontFile, int fontSize, TextStyle style, const std::string& text, SDL_Color color)
     : Component(associated), font(nullptr), texture(nullptr), text(text), style(style), fontFile(fontFile), fontSize(fontSize), color(color) {
     RemakeTexture();
 }
@@ -36,7 +36,7 @@ void Text::Render() {
     }
 }
 
-void Text::SetText(std::string text) {
+void Text::SetText(const std::string& text) {
     this->text = text;
     RemakeTexture();
 }
@@ -51,7 +51,7 @@ void Text::SetStyle(TextStyle style) {
     RemakeTexture();
 }
 
-void Text::SetFontFile(std::string fontFile) {
+void Text::SetFontFile(const std::string& fontFile) {
     this->fontFile = fontFile;
     RemakeTexture();
 }

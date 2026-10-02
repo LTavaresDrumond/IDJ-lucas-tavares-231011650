@@ -4,13 +4,13 @@
 SpriteRenderer::SpriteRenderer(GameObject& associated) : Component(associated), sprite(), cameraFollower(false), flip(SDL_FLIP_NONE) {
 }
 
-SpriteRenderer::SpriteRenderer(GameObject& associated, std::string file, int frameCountW, int frameCountH) 
+SpriteRenderer::SpriteRenderer(GameObject& associated, const std::string& file, int frameCountW, int frameCountH) 
     : Component(associated), sprite(file, frameCountW, frameCountH), cameraFollower(false), flip(SDL_FLIP_NONE) {
     associated.box.w = sprite.GetWidth();
     associated.box.h = sprite.GetHeight();
 }
 
-void SpriteRenderer::Open(std::string file) {
+void SpriteRenderer::Open(const std::string& file) {
     sprite.Open(file);
     associated.box.w = sprite.GetWidth();
     associated.box.h = sprite.GetHeight();

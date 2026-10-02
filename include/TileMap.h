@@ -15,8 +15,8 @@ private:
     int mapDepth;
 
 public:
-    TileMap(GameObject& associated, std::string file, TileSet* tileSet);
-    void Load(std::string file);
+    TileMap(GameObject& associated, const std::string& file, TileSet* tileSet);
+    void Load(const std::string& file);
     void SetTileSet(TileSet* tileSet);
     int& At(int x, int y, int z = 0);
     void Render() override;

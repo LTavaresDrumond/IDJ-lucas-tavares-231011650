@@ -5,9 +5,6 @@ GameObject::GameObject() : isDead(false), started(false), angleDeg(0) {
 }
 
 GameObject::~GameObject() {
-    for (int i = components.size() - 1; i >= 0; i--) {
-        delete components[i];
-    }
     components.clear();
 }
 
@@ -46,7 +43,8 @@ void GameObject::AddComponent(Component* cpt) {
 }
 
 void GameObject::RemoveComponent(Component* cpt) {
-    auto it = std::find(components.begin(), components.end(), cpt);
+    auto it = std::find_if(components.begin(), components.end(),
+        [cpt](const std::unique_ptr<Component>& ptr) { return ptr.get() == cpt; });
     if (it != components.end()) {
         components.erase(it);
     }

@@ -15,7 +15,7 @@ class State;
 
 class Game {
 private:
-    Game(std::string title, int width, int height);
+    Game(const std::string& title, int width, int height);
     static Game* instance;
     SDL_Window* window;
     SDL_Renderer* renderer;

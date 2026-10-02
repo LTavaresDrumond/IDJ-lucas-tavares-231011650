@@ -4,13 +4,13 @@
 #include <fstream>
 #include <iostream>
 
-TileMap::TileMap(GameObject& associated, std::string file, TileSet* tileSet) 
+TileMap::TileMap(GameObject& associated, const std::string& file, TileSet* tileSet) 
     : Component(associated), mapWidth(0), mapHeight(0), mapDepth(0) {
     SetTileSet(tileSet);
     Load(file);
 }
 
-void TileMap::Load(std::string file) {
+void TileMap::Load(const std::string& file) {
     std::ifstream f(file);
     if (!f.is_open()) {
         std::cerr << "Erro ao carregar o arquivo de mapa " << file << std::endl;

@@ -1,12 +1,13 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include "Rect.h"
 #include "Component.h"
 
 class GameObject {
 private:
-    std::vector<Component*> components;
+    std::vector<std::unique_ptr<Component>> components;
     bool isDead;
     bool started;
 
@@ -29,7 +30,7 @@ public:
     template <typename T>
     T* GetComponent() {
         for (unsigned i = 0; i < components.size(); i++) {
-            T* cpt = dynamic_cast<T*>(components[i]);
+            T* cpt = dynamic_cast<T*>(components[i].get());
             if (cpt != nullptr) {
                 return cpt;
             }
